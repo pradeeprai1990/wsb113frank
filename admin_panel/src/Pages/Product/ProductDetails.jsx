@@ -7,9 +7,12 @@ export default function ProductDetails() {
   let [sizeData,setSizeData]=useState([])
   let [colorData,setColorData]=useState([])
   let [parentCatData,setParentCatData]=useState([])
-
+  const [galleryPreview, setGalleryPreview] = useState([]);
   let [subCatData,setsubCatData]=useState([])
 
+  const handleGalleryPreview = (e) => {
+    setGalleryPreview(Array.from(e.target.files));
+  };
 
  let getSubcategory=(pid)=>{
 
@@ -44,10 +47,11 @@ export default function ProductDetails() {
   let saveProduct=(event)=>{
     event.preventDefault();
     let formDataValue = new FormData(event.target);
-    axios.post(AdminBaseURL+"/product/product-insert",formDataValue).
-    then((res)=>{
-      console.log(res.data)
+    axios.post(AdminBaseURL+"/product/product-insert",formDataValue)
+    .then((res)=>{
+      console.log(res.data) 
     })
+    
   }
   return (
     <section className="w-full">
@@ -133,6 +137,7 @@ export default function ProductDetails() {
                   <input
                     type="file"
                     name="pdGalleryImg-input"
+                    onChange={handleGalleryPreview}
                     id="file-input"
                     className="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none  
   file:bg-gray-50 file:border-0
@@ -140,7 +145,14 @@ export default function ProductDetails() {
   file:py-3 file:px-4
   " multiple
                   />
-              
+
+          <div className="flex gap-2">
+                    {galleryPreview &&
+                      galleryPreview.map((imgPre) => (
+                        <img src={URL.createObjectURL(imgPre)} className="w-[50px]" />
+                      ))}
+                  </div>
+
               </div>
               <div className='mb-5'>
         <div className="grid sm:grid-cols-2 gap-8">
