@@ -3,9 +3,14 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AdminBaseURL } from '../../config/config';
 import toast, { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from 'react-redux';
+import { storeadminData } from '../../reducers/loginSlice';
 export default function Login() {
-
+    let dispatch=useDispatch()
     let [loginstatus,setLoginstatus]=useState(false)
+    let adminID=useSelector((state)=>{
+       return state.adminStore.adminId
+    })
     let handleLogin=(event)=>{
       
         event.preventDefault();
@@ -17,6 +22,8 @@ export default function Login() {
         axios.post(AdminBaseURL+"/auth/login",obj)
         .then((res)=>{
             if(res.data.status){
+               
+                dispatch(storeadminData(res.data.adminData))
                 setLoginstatus(true)
             }
             else{
@@ -29,10 +36,10 @@ export default function Login() {
 
     let navigator = useNavigate();
     useEffect(()=>{
-        if(loginstatus){
+        if( adminID!==undefined && adminID!==""){
             navigator("/Home");
         }
-    },[loginstatus])
+    },[adminID])
   return (
     <section className="bg-gray-50 font-urbanist">
         

@@ -1,7 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
+
+    let adminID=useSelector((state)=>{
+        return state.adminStore.adminId
+     })
+     let navigator = useNavigate();
+
+     useEffect(()=>{
+        if(adminID=="" || adminID==undefined){
+            navigator("/");
+        }
+     },[adminID])
   return (
     <header className='border-b-2'>
               <Toaster
